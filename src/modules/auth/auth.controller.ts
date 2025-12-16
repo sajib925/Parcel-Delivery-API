@@ -83,9 +83,9 @@ const logout = catchAsync(async (req: Request, res: Response, next: NextFunction
 
 const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { oldPassword, newPassword } = req.body
-  const decodedToken = req.user
+  const decodedToken = req.user as JwtPayload
 
-  await AuthServices.changePassword(oldPassword, newPassword, decodedToken as JwtPayload)
+  await AuthServices.changePassword(oldPassword, newPassword, decodedToken)
 
   sendResponse(res, {
     success: true,
@@ -96,9 +96,10 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
 })
 
 const getProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.user?.userId
+  const decodedToken = req.user as JwtPayload
+  const userId = decodedToken.userId as string
 
-  const result = await AuthServices.getProfile(userId as string)
+  const result = await AuthServices.getProfile(userId)
 
   sendResponse(res, {
     success: true,

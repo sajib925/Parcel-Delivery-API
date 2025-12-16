@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { handleCastError } from "../helpers/handleCastError";
-import { handlerDuplicateError } from "../helpers/handleDuplicateError";
 import { TErrorSources } from "../interfaces/error.type";
 import { handlerZodError } from "../helpers/handleZodError";
-import { handlerValidationError } from "../helpers/handleValidationError";
-import { deleteImageFromCLoudinary } from "../config/cloudinary.config";
+import { deleteImageFromCloudinary } from "../config/cloudinary.config";
+import { handleDuplicateError } from "../helpers/handleDuplicateError";
+import { handleValidationError } from "../helpers/handleValidationError";
 
 export const globalErrorHandler = async (err: any, req: Request, res: Response, next: NextFunction) => {
     if (envVars.NODE_ENV === "development") {
@@ -16,13 +14,13 @@ export const globalErrorHandler = async (err: any, req: Request, res: Response, 
     }
     console.log({ file: req.files });
     if (req.file) {
-        await deleteImageFromCLoudinary(req.file.path)
+        await deleteImageFromCloudinary(req.file.path)
     }
 
     if (req.files && Array.isArray(req.files) && req.files.length) {
         const imageUrls = (req.files as Express.Multer.File[]).map(file => file.path)
 
-        await Promise.all(imageUrls.map(url => deleteImageFromCLoudinary(url)))
+        await Promise.all(imageUrls.map(url => deleteImageFromCloudinary(url)))
     }
 
     let errorSources: TErrorSources[] = []
@@ -31,7 +29,7 @@ export const globalErrorHandler = async (err: any, req: Request, res: Response, 
 
     //Duplicate error
     if (err.code === 11000) {
-        const simplifiedError = handlerDuplicateError(err)
+        const simplifiedError = handleDuplicateError(err)
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message
     }
@@ -49,7 +47,7 @@ export const globalErrorHandler = async (err: any, req: Request, res: Response, 
     }
     //Mongoose Validation Error
     else if (err.name === "ValidationError") {
-        const simplifiedError = handlerValidationError(err)
+        const simplifiedError = handleValidationError(err)
         statusCode = simplifiedError.statusCode;
         errorSources = simplifiedError.errorSources as TErrorSources[]
         message = simplifiedError.message

@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express"
+import type { JwtPayload } from "jsonwebtoken"
 import httpStatus from "http-status-codes"
 import { catchAsync } from "../../utils/catchAsync"
 import { ParcelServices } from "./parcel.service"
@@ -17,7 +18,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 const createParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const senderId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const senderId = decodedToken.userId as string
   const parcelImage = req.file?.path
 
   const result = await ParcelServices.createParcel(req.body, senderId, parcelImage)
@@ -31,7 +33,8 @@ const createParcel = catchAsync(async (req: Request, res: Response, next: NextFu
 })
 
 const getMySentParcels = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const senderId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const senderId = decodedToken.userId as string
 
   const result = await ParcelServices.getMySentParcels(senderId, req.query as Record<string, string>)
 
@@ -45,7 +48,8 @@ const getMySentParcels = catchAsync(async (req: Request, res: Response, next: Ne
 })
 
 const getMyReceivedParcels = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const receiverId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const receiverId = decodedToken.userId as string
 
   const result = await ParcelServices.getMyReceivedParcels(receiverId, req.query as Record<string, string>)
 
@@ -60,8 +64,9 @@ const getMyReceivedParcels = catchAsync(async (req: Request, res: Response, next
 
 const getParcelById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { parcelId } = req.params
-  const userId = req.user?.userId as string
-  const role = req.user?.role as string
+  const decodedToken = req.user as JwtPayload
+  const userId = decodedToken.userId as string
+  const role = decodedToken.role as string
 
   const result = await ParcelServices.getParcelById(parcelId, userId, role)
 
@@ -88,7 +93,8 @@ const trackParcel = catchAsync(async (req: Request, res: Response, next: NextFun
 
 const cancelParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { parcelId } = req.params
-  const senderId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const senderId = decodedToken.userId as string
   const { reason } = req.body
 
   const result = await ParcelServices.cancelParcel(parcelId, senderId, reason)
@@ -103,7 +109,8 @@ const cancelParcel = catchAsync(async (req: Request, res: Response, next: NextFu
 
 const confirmDelivery = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { parcelId } = req.params
-  const receiverId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const receiverId = decodedToken.userId as string
 
   const result = await ParcelServices.confirmDelivery(parcelId, receiverId)
 
@@ -129,7 +136,8 @@ const getAllParcels = catchAsync(async (req: Request, res: Response, next: NextF
 
 const updateParcelStatus = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { parcelId } = req.params
-  const adminId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const adminId = decodedToken.userId as string
 
   const result = await ParcelServices.updateParcelStatus(parcelId, adminId, req.body)
 
@@ -143,7 +151,8 @@ const updateParcelStatus = catchAsync(async (req: Request, res: Response, next: 
 
 const toggleBlockParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { parcelId } = req.params
-  const adminId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const adminId = decodedToken.userId as string
 
   const result = await ParcelServices.toggleBlockParcel(parcelId, adminId)
 

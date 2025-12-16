@@ -4,6 +4,11 @@ export enum Role {
   RECEIVER = "receiver",
 }
 
+export enum IsActive {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+}
+
 export interface IUserPayload {
   name: string
   email: string
@@ -12,4 +17,7 @@ export interface IUserPayload {
   phone?: string
   address?: string
   picture?: string
+  isActive?: IsActive
+  isDeleted?: boolean
+  isVerified?: boolean
 }

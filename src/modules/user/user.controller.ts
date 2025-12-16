@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express"
+import type { JwtPayload } from "jsonwebtoken"
 import httpStatus from "http-status-codes"
 import { catchAsync } from "../../utils/catchAsync"
 import { UserServices } from "./user.service"
@@ -18,7 +19,8 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFun
 
 const toggleBlockUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.params
-  const currentUserId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const currentUserId = decodedToken.userId as string
 
   const result = await UserServices.toggleBlockUser(userId, currentUserId)
 
@@ -32,7 +34,8 @@ const toggleBlockUser = catchAsync(async (req: Request, res: Response, next: Nex
 
 const deleteUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.params
-  const currentUserId = req.user?.userId as string
+  const decodedToken = req.user as JwtPayload
+  const currentUserId = decodedToken.userId as string
 
   await UserServices.deleteUser(userId, currentUserId)
 
