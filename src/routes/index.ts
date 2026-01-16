@@ -20,6 +20,14 @@ const moduleRoutes = [
   },
 ]
 
+apiRoutes.get("/", (_req, res) => {
+  res.json({
+    success: true,
+    message: "Parcel Delivery API v1 is running",
+  })
+})
+
+
 moduleRoutes.forEach((route) => {
   apiRoutes.use(route.path, route.route)
 })

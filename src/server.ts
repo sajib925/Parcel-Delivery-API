@@ -11,7 +11,7 @@ const startServer = async () => {
     console.log("Connected to MongoDB!")
 
     server = app.listen(envVars.PORT, () => {
-      console.log(`Server is listening on port ${envVars.PORT}`)
+      console.log(`API root: http://localhost:${envVars.PORT}/api/v1`)
       console.log(`Environment: ${envVars.NODE_ENV}`)
     })
   } catch (error) {

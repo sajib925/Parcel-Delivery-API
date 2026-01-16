@@ -17,12 +17,12 @@ const register = async (payload: Partial<IUserPayload>) => {
     throw new AppError(httpStatus.BAD_REQUEST, "Email already exists")
   }
 
-  const hashedPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND))
+  // const hashedPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND))
 
   const newUser = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password,
     role,
     phone,
     address,
