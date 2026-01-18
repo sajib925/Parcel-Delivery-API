@@ -2,6 +2,7 @@ import { Router } from "express"
 import parcelRoutes from "../modules/parcel/parcel.routes"
 import { authRoutes } from "../modules/auth/auth.route"
 import { userRoutes } from "../modules/user/user.route"
+import { reviewRoutes } from "../modules/review/review.routes"
 
 export const apiRoutes = Router()
 
@@ -17,6 +18,10 @@ const moduleRoutes = [
   {
     path: "/parcels",
     route: parcelRoutes,
+  },
+  {
+    path: "/review",
+    route: reviewRoutes,
   },
 ]
 
