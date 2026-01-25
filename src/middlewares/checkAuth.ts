@@ -7,36 +7,32 @@ import { envVars } from "../config/env"
 import { catchAsync } from "../utils/catchAsync"
 
 export const checkAuth = (...requiredRoles: string[]) => {
-  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization
+  
+  return catchAsync(async (req: Request, _res: Response, next: NextFunction) => {
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "Authentication required. Please provide a valid token.")
+    const token = req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.split(" ")[1] : req.cookies?.accessToken
+
+    if (!token) {
+      throw new AppError( httpStatus.UNAUTHORIZED, "Authentication required")
     }
-
-    const token = authHeader.split(" ")[1]
 
     const decoded = verifyToken(token, envVars.JWT_ACCESS_SECRET)
 
     const user = await User.findById(decoded.userId)
 
     if (!user) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "User not found. Please login again.")
+      throw new AppError( httpStatus.UNAUTHORIZED, "User not found. Please login again.")
     }
 
     if (user.isBlocked) {
-      throw new AppError(httpStatus.FORBIDDEN, "Your account has been blocked. Please contact admin.")
+      throw new AppError( httpStatus.FORBIDDEN, "Your account has been blocked.")
     }
 
     if (requiredRoles.length && !requiredRoles.includes(decoded.role)) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        `Access denied. Only ${requiredRoles.join(", ")} can access this resource.`,
-      )
+      throw new AppError( httpStatus.FORBIDDEN, "You are not permitted to access this route" )
     }
 
     req.user = decoded
-
     next()
   })
 }
