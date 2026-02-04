@@ -8,14 +8,11 @@ let server: Server
 const startServer = async () => {
   try {
     await mongoose.connect(envVars.DB_URL)
-    console.log("Connected to MongoDB!")
 
     server = app.listen(envVars.PORT, () => {
       console.log(`API root: http://localhost:${envVars.PORT}/api/v1`)
-      console.log(`Environment: ${envVars.NODE_ENV}`)
     })
   } catch (error) {
-    console.log(error)
     process.exit(1)
   }
 }

@@ -10,6 +10,8 @@ router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout", checkAuth(), AuthControllers.logout)
 router.post("/change-password", checkAuth(), AuthControllers.changePassword)
 router.get("/profile", checkAuth(), AuthControllers.getProfile)
+router.patch("/profile", checkAuth(), AuthControllers.updateProfile)
+
 
 export const authRoutes = router
 export default router

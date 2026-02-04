@@ -121,10 +121,39 @@ const getProfile = async (userId: string) => {
   return user
 }
 
+const updateProfile = async (
+  userId: string,
+  payload: {
+    name?: string
+    phone?: string
+    address?: string
+    picture?: string
+  },
+) => {
+  const user = await User.findById(userId)
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found")
+  }
+
+  if (payload.name) user.name = payload.name
+  if (payload.phone) user.phone = payload.phone
+  if (payload.address) user.address = payload.address
+  if (payload.picture) user.picture = payload.picture
+
+  await user.save()
+
+  const updatedUser = await User.findById(userId).select("-password")
+
+  return updatedUser
+}
+
+
 export const AuthServices = {
   register,
   login,
   getNewAccessToken,
   changePassword,
   getProfile,
+  updateProfile
 }

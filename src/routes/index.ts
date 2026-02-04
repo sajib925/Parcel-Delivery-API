@@ -3,6 +3,7 @@ import parcelRoutes from "../modules/parcel/parcel.routes"
 import { authRoutes } from "../modules/auth/auth.route"
 import { userRoutes } from "../modules/user/user.route"
 import { reviewRoutes } from "../modules/review/review.routes"
+import { contactRoutes } from "../modules/contact/contact.route"
 
 export const apiRoutes = Router()
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: "/review",
     route: reviewRoutes,
+  },
+  {
+    path: "/contact",
+    route: contactRoutes,
   },
 ]
 

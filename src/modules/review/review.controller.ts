@@ -20,49 +20,18 @@ const createReview = catchAsync(async (req: Request, res: Response, next: NextFu
   })
 })
 
-const getParcelReviews = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { parcelId } = req.params
-
-  const result = await ReviewServices.getParcelReviews(parcelId)
+const getAllReviews = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const result = await ReviewServices.getAllReviews()
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Reviews retrieved successfully",
-    data: result,
-  })
-})
-
-const getUserReceivedReviews = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const decodedToken = req.user as JwtPayload
-  const userId = decodedToken.userId as string
-
-  const result = await ReviewServices.getUserReceivedReviews(userId)
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "User reviews retrieved successfully",
-    data: result,
-  })
-})
-
-const getUserRating = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { userId } = req.params
-
-  const result = await ReviewServices.getUserRating(userId)
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "User rating retrieved successfully",
+    message: "All reviews retrieved successfully",
     data: result,
   })
 })
 
 export const ReviewControllers = {
   createReview,
-  getParcelReviews,
-  getUserReceivedReviews,
-  getUserRating,
+  getAllReviews,
 }

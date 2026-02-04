@@ -1,16 +1,12 @@
 import { Router } from "express"
 import { ReviewControllers } from "./review.controller"
 import { checkAuth } from "../../middlewares/checkAuth"
+import { Role } from "../user/user.interface"
 
 const router = Router()
 
-router.post("/:parcelId", checkAuth(), ReviewControllers.createReview)
-
-router.get("/parcel/:parcelId", ReviewControllers.getParcelReviews)
-
-router.get("/my-reviews/all", checkAuth(), ReviewControllers.getUserReceivedReviews)
-
-router.get("/user/:userId/rating", ReviewControllers.getUserRating)
+router.post("/:parcelId", checkAuth(Role.RECEIVER, Role.SENDER), ReviewControllers.createReview)
+router.get("/all", ReviewControllers.getAllReviews) 
 
 export const reviewRoutes = router
 export default router

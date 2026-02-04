@@ -109,6 +109,23 @@ const getProfile = catchAsync(async (req: Request, res: Response, next: NextFunc
   })
 })
 
+const updateProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload
+    const userId = decodedToken.userId as string
+
+    const result = await AuthServices.updateProfile(userId, req.body)
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Profile updated successfully",
+      data: result,
+    })
+  },
+)
+
+
 export const AuthControllers = {
   register,
   login,
@@ -116,4 +133,5 @@ export const AuthControllers = {
   logout,
   changePassword,
   getProfile,
+  updateProfile
 }
